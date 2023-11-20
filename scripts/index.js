@@ -1,25 +1,14 @@
-// @todo: Темплейт карточки
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
 const cardTemplate = document.querySelector('#card-template').content;
 const content = document.querySelector('.content');
 const cardContainer = content.querySelector('.places__list');
-const addCardButton = content.querySelector('.profile__add-button');
-const popupNewCard = document.querySelector('.popup_type_new-card');
-const closePopupButton = document.querySelectorAll('.popup__close');
-const popupProfileEdit = document.querySelector('.popup_type_edit');
 const editProfileButton = content.querySelector('.profile__edit-button');
-// const createCardButton = document.querySelector('.popup__button');
+const addCardButton = content.querySelector('.profile__add-button');
+const showCardImageButton = document.querySelector('.popup__image');
+const closePopupButton = document.querySelectorAll('.popup__close');
 
 function cardRender() {
   initialCards.forEach((card) => {
-    const cardElement = cardTemplate.cloneNode(true);
+    const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const deleteButton = cardElement.querySelector('.card__delete-button');
     const likeButton = cardElement.querySelector('.card__like-button');
 
@@ -31,6 +20,23 @@ function cardRender() {
     likeButton.addEventListener('click', likeCard);
 
     cardContainer.append(cardElement);
+  });
+  showPopupCardImage();
+}
+
+cardRender();
+
+function showPopupCardImage() {
+  const cardImage = content.querySelectorAll('.card__image');
+  const popupImage = document.querySelector('.popup_type_image');
+
+  cardImage.forEach((image) => {
+    image.addEventListener('click', (evt) => {
+      popupImage.querySelector('.popup__image').src = evt.target.src;
+      popupImage.querySelector('.popup__image').alt = evt.target.alt;
+      popupImage.querySelector('.popup__caption').textContent = evt.target.alt;
+      showPopup(popupImage);
+    });
   });
 }
 
@@ -44,23 +50,24 @@ function likeCard(evt) {
 }
 
 function closePopup(evt) {
-  evt.target.closest('.popup').classList.toggle('popup_is-opened');
+  const popupItem = evt.target.closest('.popup');
+  popupItem.classList.remove('popup_is-opened');
 }
 
 function showPopup(popup) {
-  popup.classList.toggle('popup_is-opened');
+  popup.classList.add('popup_is-opened');
 }
 
-addCardButton.addEventListener('click', () => {
-  showPopup(popupNewCard);
-});
-
 editProfileButton.addEventListener('click', () => {
+  const popupProfileEdit = document.querySelector('.popup_type_edit');
   showPopup(popupProfileEdit);
 });
 
-closePopupButton.forEach((button) => {
-  button.addEventListener('click', closePopup);
+addCardButton.addEventListener('click', () => {
+  const popupNewCard = document.querySelector('.popup_type_new-card');
+  showPopup(popupNewCard);
 });
 
-cardRender();
+closePopupButton.forEach((closeButton) => {
+  closeButton.addEventListener('click', closePopup);
+});
