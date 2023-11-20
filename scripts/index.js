@@ -3,7 +3,6 @@ const content = document.querySelector('.content');
 const cardContainer = content.querySelector('.places__list');
 const editProfileButton = content.querySelector('.profile__edit-button');
 const addCardButton = content.querySelector('.profile__add-button');
-const showCardImageButton = document.querySelector('.popup__image');
 const closePopupButton = document.querySelectorAll('.popup__close');
 
 function cardRender() {
