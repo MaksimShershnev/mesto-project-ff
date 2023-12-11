@@ -1,5 +1,6 @@
 import './pages/index.css';
 
+import { initialCards } from './components/cards.js';
 import { renderCard, cardContainer } from './components/card.js';
 import { handleShowPopup, handleClosePopup } from './components/modal.js';
 
@@ -10,7 +11,6 @@ const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image');
 const closePopupButtonList = document.querySelectorAll('.popup__close');
 
-
 const formEditProfile = document.forms['edit-profile'];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
@@ -19,6 +19,10 @@ const jobInput = formEditProfile.elements.description;
 const formNewCard = document.forms['new-place'];
 const placeInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements.link;
+
+initialCards.forEach((cards) => {
+  renderCard(cards);
+});
 
 function createPopupImage(card) {
   popupImage.querySelector('.popup__image').src = card.src;
@@ -69,4 +73,3 @@ closePopupButtonList.forEach((closeButton) => {
 
 formEditProfile.addEventListener('submit', handleFormSubmit);
 formNewCard.addEventListener('submit', handleFormSubmit);
-

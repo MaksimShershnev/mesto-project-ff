@@ -1,5 +1,3 @@
-import { initialCards } from './cards.js';
-
 const cardTemplate = document.querySelector('#card-template').content;
 const cardContainer = document.querySelector('.places__list');
 
@@ -17,10 +15,6 @@ function createCard(card, handleCard) {
 function renderCard(card) {
   cardContainer.prepend(createCard(card, handleCard));
 }
-
-initialCards.forEach((cards) => {
-  renderCard(cards);
-});
 
 function handleCard(evt) {
   if (evt.target.classList.contains('card__like-button')) {
