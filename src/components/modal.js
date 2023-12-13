@@ -13,11 +13,10 @@ function handleClosePopup(popup) {
 }
 
 function keyHandler(evt) {
-  popupList.forEach((popup) => {
-    if (evt.key === 'Escape') {
-      handleClosePopup(popup);
-    }
-  });
+  const popup = document.querySelector('.popup_is-opened');
+  if (evt.key === 'Escape') {
+    handleClosePopup(popup);
+  }
 }
 
 function mouseHandler(evt) {
