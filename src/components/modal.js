@@ -1,5 +1,3 @@
-const popupList = document.querySelectorAll('.popup');
-
 function handleShowPopup(popup) {
   popup.classList.add('popup_is-opened');
   document.addEventListener('keydown', keyHandler);
