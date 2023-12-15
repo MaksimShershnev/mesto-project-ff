@@ -1,18 +1,14 @@
 import './pages/index.css';
 
 import { initialCards } from './components/cards.js';
-import { renderCard, cardContainer } from './components/card.js';
+import { renderCard } from './components/card.js';
 import { handleShowPopup, handleClosePopup } from './components/modal.js';
 
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
 const popupProfileEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
-const popupImage = document.querySelector('.popup_type_image');
-const image = document.querySelector('.popup__image');
-const imageСaption = document.querySelector('.popup__caption');
 const closePopupButtonList = document.querySelectorAll('.popup__close');
-
 const formEditProfile = document.forms['edit-profile'];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
@@ -26,18 +22,11 @@ initialCards.forEach((cards) => {
   renderCard(cards);
 });
 
-function createPopupImage(card) {
-  image.src = card.src;
-  image.alt = card.alt;
-  imageСaption.textContent = card.alt;
-  handleShowPopup(popupImage);
-}
-
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
-  handleClosePopup(evt.target.closest('.popup'));
+  handleClosePopup(popupProfileEdit);
 }
 
 function handleAddCardFormSubmit(evt) {
@@ -47,7 +36,7 @@ function handleAddCardFormSubmit(evt) {
   card.link = linkInput.value;
   renderCard(card);
   formNewCard.reset();
-  handleClosePopup(evt.target.closest('.popup'));
+  handleClosePopup(popupNewCard);
 }
 
 editProfileButton.addEventListener('click', () => {
@@ -60,14 +49,8 @@ addCardButton.addEventListener('click', () => {
   handleShowPopup(popupNewCard);
 });
 
-cardContainer.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('card__image')) {
-    createPopupImage(evt.target);
-  }
-});
-
 closePopupButtonList.forEach((closeButton) => {
-  closeButton.addEventListener('click', function (evt) {
+  closeButton.addEventListener('click', (evt) => {
     const popup = evt.target.closest('.popup');
     handleClosePopup(popup);
   });
