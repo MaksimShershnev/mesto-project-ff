@@ -1,10 +1,5 @@
-import { handleShowPopup } from './modal.js';
-
 const cardTemplate = document.querySelector('#card-template').content;
 const cardContainer = document.querySelector('.places__list');
-const popupImage = document.querySelector('.popup_type_image');
-const image = popupImage.querySelector('.popup__image');
-const imageСaption = popupImage.querySelector('.popup__caption');
 
 function getCardTemplate() {
   const cloneTemplateCard = cardTemplate.querySelector('.card').cloneNode(true);
@@ -29,7 +24,7 @@ function createCard(card, handleLikeCard, handleDeleteCard, handleClickImage) {
   return cardItem;
 }
 
-function renderCard(card) {
+function renderCard(card, handleClickImage) {
   cardContainer.prepend(
     createCard(card, handleLikeCard, handleDeleteCard, handleClickImage)
   );
@@ -41,13 +36,6 @@ function handleDeleteCard(evt) {
 
 function handleLikeCard(evt) {
   evt.target.classList.toggle('card__like-button_is-active');
-}
-
-function handleClickImage(evt) {
-  image.src = evt.target.src;
-  image.alt = evt.target.alt;
-  imageСaption.textContent = evt.target.alt;
-  handleShowPopup(popupImage);
 }
 
 export { renderCard };
