@@ -3,6 +3,7 @@ import './pages/index.css';
 import { initialCards } from './components/cards.js';
 import { renderCard } from './components/card.js';
 import { handleShowPopup, handleClosePopup } from './components/modal.js';
+import { clearValidation, enableValidation } from './components/validation.js';
 
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
@@ -20,6 +21,15 @@ const jobInput = formEditProfile.elements.description;
 const formNewCard = document.forms['new-place'];
 const placeInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements.link;
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active',
+};
 
 initialCards.forEach((cards) => {
   renderCard(cards, handleClickImage);
@@ -52,10 +62,14 @@ function handleAddCardFormSubmit(evt) {
 editProfileButton.addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidation(formEditProfile, validationConfig);
   handleShowPopup(popupProfileEdit);
 });
 
 addCardButton.addEventListener('click', () => {
+  placeInput.value = '';
+  linkInput.value = '';
+  clearValidation(formNewCard, validationConfig);
   handleShowPopup(popupNewCard);
 });
 
@@ -68,3 +82,5 @@ closePopupButtonList.forEach((closeButton) => {
 
 formEditProfile.addEventListener('submit', handleProfileFormSubmit);
 formNewCard.addEventListener('submit', handleAddCardFormSubmit);
+
+enableValidation(validationConfig);
