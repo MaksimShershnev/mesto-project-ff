@@ -1,5 +1,3 @@
-export { clearValidation, enableValidation };
-
 function clearValidation(formElement, config) {
   const inputList = Array.from(
     formElement.querySelectorAll(config.inputSelector)
@@ -83,3 +81,5 @@ function enableValidation(config) {
     setEventListeners(config, formElement);
   });
 }
+
+export { clearValidation, enableValidation };

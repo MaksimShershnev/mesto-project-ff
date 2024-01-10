@@ -1,9 +1,10 @@
 import './pages/index.css';
 
-import { initialCards } from './components/cards.js';
+// import { initialCards } from './components/cards.js';
 import { renderCard } from './components/card.js';
 import { handleShowPopup, handleClosePopup } from './components/modal.js';
 import { clearValidation, enableValidation } from './components/validation.js';
+import { setUserInfo, getInitialData, addNewCard } from './components/api.js';
 
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
@@ -31,10 +32,6 @@ const validationConfig = {
   errorClass: 'popup__input-error_active',
 };
 
-initialCards.forEach((cards) => {
-  renderCard(cards, handleClickImage);
-});
-
 function handleClickImage(evt) {
   image.src = evt.target.src;
   image.alt = evt.target.alt;
@@ -42,21 +39,31 @@ function handleClickImage(evt) {
   handleShowPopup(popupImage);
 }
 
+const renderProfileInfo = (userName, userAbout) => {
+  profileTitle.textContent = userName;
+  profileDescription.textContent = userAbout;
+};
+
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  profileTitle.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
-  handleClosePopup(popupProfileEdit);
+  setUserInfo(nameInput.value, jobInput.value)
+    .then((user) => {
+      renderProfileInfo(user.name, user.about);
+      handleClosePopup(popupProfileEdit);
+    })
+    .catch((err) => console.log(err));
 }
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
-  const card = [];
-  card.name = placeInput.value;
-  card.link = linkInput.value;
-  renderCard(card, handleClickImage);
-  formNewCard.reset();
-  handleClosePopup(popupNewCard);
+  addNewCard(placeInput.value, linkInput.value)
+    .then((cardData) => {
+      // console.log(cardData);
+      renderCard(cardData, handleClickImage);
+      formNewCard.reset();
+      handleClosePopup(popupNewCard);
+    })
+    .catch((err) => console.log(err));
 }
 
 editProfileButton.addEventListener('click', () => {
@@ -82,5 +89,19 @@ closePopupButtonList.forEach((closeButton) => {
 
 formEditProfile.addEventListener('submit', handleProfileFormSubmit);
 formNewCard.addEventListener('submit', handleAddCardFormSubmit);
+
+const InitialCards = (cards) => {
+  cards.forEach((card) => {
+    renderCard(card, handleClickImage);
+  });
+};
+
+getInitialData()
+  .then((data) => {
+    renderProfileInfo(data[0].name, data[0].about);
+    InitialCards(data[1]);
+    // console.log(data[1]);
+  })
+  .catch((err) => console.log(err));
 
 enableValidation(validationConfig);
