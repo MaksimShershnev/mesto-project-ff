@@ -1,3 +1,5 @@
+const profileId = '4d4af040351ef3fedcc56ba9';
+
 // авторизация
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-4',
@@ -8,7 +10,7 @@ const config = {
 };
 
 // получение данных пользователя
-export const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
+const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
   headers: config.headers,
 }).then((res) => {
   if (res.ok) {
@@ -35,13 +37,13 @@ const getInitialData = () => {
 };
 
 // отправка данных о пользователе на сервер
-const setUserInfo = (userName, userAbout) => {
+const setUserInfo = (name, about) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
-      name: userName,
-      about: userAbout,
+      name,
+      about,
     }),
   }).then((res) => {
     if (res.ok) {
@@ -53,13 +55,13 @@ const setUserInfo = (userName, userAbout) => {
   });
 };
 
-const addNewCard = (cardName, cardLink) => {
+const addNewCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards `, {
     method: 'POST',
     headers: config.headers,
     body: JSON.stringify({
-      name: cardName,
-      link: cardLink,
+      name,
+      link,
     }),
   }).then((res) => {
     if (res.ok) {
@@ -85,4 +87,41 @@ const deleteCard = (cardId) => {
   });
 };
 
-export { setUserInfo, getInitialData, addNewCard, deleteCard };
+const toggleLike = (cardId, method) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method,
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(
+      `Ошибка при обработке лайка карточки. Ошибка ${res.status}`
+    );
+  });
+};
+
+const setUserAvatar = (avatar) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar,
+    }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка при смене аватара. Ошибка ${res.status}`);
+  });
+};
+
+export {
+  profileId,
+  setUserInfo,
+  getInitialData,
+  addNewCard,
+  deleteCard,
+  toggleLike,
+  setUserAvatar,
+};
