@@ -138,5 +138,3 @@ getInitialData()
   .catch((err) => console.log(err));
 
 enableValidation(validationConfig);
-
-console.log(profileAvatar.style['background-image']);
