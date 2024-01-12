@@ -1,3 +1,8 @@
+const popupError = document.querySelector('.popup-error');
+const popupErrorDesctiption = popupError.querySelector(
+  '.popup-error__description'
+);
+
 function handleShowPopup(popup) {
   popup.classList.add('popup_is-opened');
   document.addEventListener('keydown', keyHandler);
@@ -23,4 +28,10 @@ function mouseHandler(evt) {
   }
 }
 
-export { handleShowPopup, handleClosePopup };
+function showPopupError(description) {
+  popupErrorDesctiption.textContent = description;
+  setTimeout(() => popupError.classList.add('popup-error_is-opened'), 400);
+  setTimeout(() => popupError.classList.remove('popup-error_is-opened'), 4000);
+}
+
+export { handleShowPopup, handleClosePopup, showPopupError };

@@ -1,7 +1,10 @@
 .popup__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   max-width: 430px;
   width: 100%;
-  min-height: 257px;
+  min-height: 181px;
   background-color: #fff;
   border-radius: 10px;
   position: relative;

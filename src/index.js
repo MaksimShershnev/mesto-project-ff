@@ -1,8 +1,11 @@
 import './pages/index.css';
 
-// import { initialCards } from './components/cards.js';
 import { renderCard } from './components/card.js';
-import { handleShowPopup, handleClosePopup } from './components/modal.js';
+import {
+  handleShowPopup,
+  handleClosePopup,
+  showPopupError,
+} from './components/modal.js';
 import { clearValidation, enableValidation } from './components/validation.js';
 import {
   profileId,
@@ -32,6 +35,9 @@ const placeInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements.link;
 const formEditAvatar = document.forms['edit-avatar'];
 const avatarLinkInput = formEditAvatar.elements.link;
+const editAvatarSubmitButton = formEditAvatar.querySelector('.popup__button');
+const editProfileSubmitButton = formEditProfile.querySelector('.popup__button');
+const addCardSubmitButton = formNewCard.querySelector('.popup__button');
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -42,14 +48,14 @@ const validationConfig = {
   errorClass: 'popup__input-error_active',
 };
 
-const renderProfileInfo = (userName, userAbout) => {
+function renderProfileInfo(userName, userAbout) {
   profileTitle.textContent = userName;
   profileDescription.textContent = userAbout;
-};
+}
 
-const renderProfileAvatar = (avatar) => {
+function renderProfileAvatar(avatar) {
   profileAvatar.style['background-image'] = `url("${avatar}")`;
-};
+}
 
 function handleClickImage(evt) {
   image.src = evt.target.src;
@@ -58,37 +64,67 @@ function handleClickImage(evt) {
   handleShowPopup(popupImage);
 }
 
+function changeSubmitButtonText(button) {
+  switch (button.textContent) {
+    case 'Сохранение...':
+      setTimeout(() => {
+        button.textContent = 'Сохранить';
+      }, 500);
+      break;
+    default:
+      button.textContent = 'Сохранение...';
+  }
+}
+
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
+  changeSubmitButtonText(editProfileSubmitButton);
   setUserInfo(nameInput.value, jobInput.value)
     .then((user) => {
       renderProfileInfo(user.name, user.about);
       handleClosePopup(popupProfileEdit);
+      changeSubmitButtonText(editProfileSubmitButton);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      changeSubmitButtonText(editProfileSubmitButton);
+      showPopupError(err);
+      console.log(err);
+    });
 }
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
+  changeSubmitButtonText(addCardSubmitButton);
   addNewCard(placeInput.value, linkInput.value)
     .then((cardData) => {
       const position = 'start';
       renderCard(cardData, handleClickImage, profileId, position);
       handleClosePopup(popupNewCard);
+      changeSubmitButtonText(addCardSubmitButton);
       formNewCard.reset();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      changeSubmitButtonText(addCardSubmitButton);
+      showPopupError(err);
+      console.log(err);
+    });
 }
 
 function handleEditAvatarFormSubmit(evt) {
   evt.preventDefault();
+  changeSubmitButtonText(editAvatarSubmitButton);
   setUserAvatar(avatarLinkInput.value)
     .then(({ avatar }) => {
       renderProfileAvatar(avatar);
       handleClosePopup(popupEditAvatar);
+      changeSubmitButtonText(editAvatarSubmitButton);
       formEditAvatar.reset();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      changeSubmitButtonText(editAvatarSubmitButton);
+      showPopupError(err);
+      console.log(err);
+    });
 }
 
 profileAvatar.addEventListener('click', () => {
@@ -130,11 +166,13 @@ const InitialCards = (cards) => {
 
 getInitialData()
   .then(([profile, cards]) => {
-    console.log(profile);
     renderProfileInfo(profile.name, profile.about);
     renderProfileAvatar(profile.avatar);
     InitialCards(cards);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    showPopupError(err);
+    console.log(err);
+  });
 
 enableValidation(validationConfig);

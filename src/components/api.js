@@ -1,6 +1,5 @@
 const profileId = '4d4af040351ef3fedcc56ba9';
 
-// авторизация
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-4',
   headers: {
@@ -9,7 +8,6 @@ const config = {
   },
 };
 
-// получение данных пользователя
 const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
   headers: config.headers,
 }).then((res) => {
@@ -17,18 +15,17 @@ const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
     return res.json();
   }
   return Promise.reject(
-    `Ошибка загрузки данных пользователя. Ошибка ${res.status}`
+    `Ошибка при получении данных пользователя. Ошибка ${res.status}`
   );
 });
 
-// получение данных карточек
 const getInitialCards = fetch(`${config.baseUrl}/cards`, {
   headers: config.headers,
 }).then((res) => {
   if (res.ok) {
     return res.json();
   }
-  return Promise.reject(`Ошибка загрузки карточек. Ошибка ${res.status}`);
+  return Promise.reject(`Ошибка при получении карточек. Ошибка ${res.status}`);
 });
 
 const getInitialData = () => {
@@ -36,7 +33,6 @@ const getInitialData = () => {
   return Promise.all(loadCardsSuccess);
 };
 
-// отправка данных о пользователе на сервер
 const setUserInfo = (name, about) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
@@ -50,7 +46,7 @@ const setUserInfo = (name, about) => {
       return res.json();
     }
     return Promise.reject(
-      `Ошибка обновления данных профиля на сервере. Ошибка ${res.status}`
+      `Ошибка при отправке информации на сервер. Ошибка ${res.status}`
     );
   });
 };

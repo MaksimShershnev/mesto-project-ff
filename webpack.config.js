@@ -49,6 +49,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html', // путь к файлу index.html
+      favicon: './src/images/favicon.ico', // фавикон
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(), // подключение плагина для объединения файлов

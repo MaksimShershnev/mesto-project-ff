@@ -1,7 +1,11 @@
 import { deleteCard, toggleLike } from './api.js';
+import { handleShowPopup, handleClosePopup, showPopupError } from './modal.js';
 
 const cardTemplate = document.querySelector('#card-template').content;
 const cardContainer = document.querySelector('.places__list');
+const popupConfirmDelete = document.querySelector('.popup_type_сonfirm-delete');
+const confirmDeleteCardButton =
+  popupConfirmDelete.querySelector('.popup__button');
 
 function getCardTemplate() {
   const cloneTemplateCard = cardTemplate.querySelector('.card').cloneNode(true);
@@ -58,27 +62,19 @@ function isOwnerCard(cardOwnerId, button, profileId) {
   return true;
 }
 
-function renderCard(card, handleClickImage, profileId, position) {
-  const newCard = createCard(
-    card,
-    handleLikeCard,
-    handleDeleteCard,
-    handleClickImage,
-    profileId
-  );
-  switch (position) {
-    case 'start':
-      cardContainer.prepend(newCard);
-      break;
-    default:
-      cardContainer.append(newCard);
-  }
-}
-
 function handleDeleteCard(evt, cardId) {
-  deleteCard(cardId)
-    .then(() => evt.target.closest('.card').remove())
-    .catch((err) => console.log(err));
+  handleShowPopup(popupConfirmDelete);
+  confirmDeleteCardButton.addEventListener('click', () => {
+    deleteCard(cardId)
+      .then(() => {
+        evt.target.closest('.card').remove();
+        handleClosePopup(popupConfirmDelete);
+      })
+      .catch((err) => {
+        showPopupError(err);
+        console.log(err);
+      });
+  });
 }
 
 function handleLikeCard(evt, card, countOfLikes, profileId) {
@@ -99,8 +95,28 @@ function handleLikeCard(evt, card, countOfLikes, profileId) {
           card.likes = likes;
           countOfLikes.textContent = likes.length;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          showPopupError(err);
+          console.log(err);
+        });
       break;
+  }
+}
+
+function renderCard(card, handleClickImage, profileId, position) {
+  const newCard = createCard(
+    card,
+    handleLikeCard,
+    handleDeleteCard,
+    handleClickImage,
+    profileId
+  );
+  switch (position) {
+    case 'start':
+      cardContainer.prepend(newCard);
+      break;
+    default:
+      cardContainer.append(newCard);
   }
 }
 
