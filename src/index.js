@@ -13,6 +13,7 @@ import {
   getInitialData,
   addNewCard,
   setUserAvatar,
+  isLinkImage,
 } from './components/api.js';
 
 const editProfileButton = document.querySelector('.profile__edit-button');
@@ -95,16 +96,24 @@ function handleProfileFormSubmit(evt) {
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
   changeSubmitButtonText(addCardSubmitButton);
-  addNewCard(placeInput.value, linkInput.value)
-    .then((cardData) => {
-      const position = 'start';
-      renderCard(cardData, handleClickImage, profileId, position);
-      handleClosePopup(popupNewCard);
-      changeSubmitButtonText(addCardSubmitButton);
-      formNewCard.reset();
+  isLinkImage(linkInput.value)
+    .then(() => {
+      addNewCard(placeInput.value, linkInput.value)
+        .then((cardData) => {
+          const position = 'start';
+          renderCard(cardData, handleClickImage, profileId, position);
+          handleClosePopup(popupNewCard);
+          changeSubmitButtonText(addCardSubmitButton);
+          formNewCard.reset();
+        })
+        .catch((err) => {
+          changeSubmitButtonText(addCardSubmitButton);
+          showPopupError(err);
+          console.log(err);
+        });
     })
     .catch((err) => {
-      changeSubmitButtonText(addCardSubmitButton);
+      changeSubmitButtonText(editAvatarSubmitButton);
       showPopupError(err);
       console.log(err);
     });
@@ -113,12 +122,20 @@ function handleAddCardFormSubmit(evt) {
 function handleEditAvatarFormSubmit(evt) {
   evt.preventDefault();
   changeSubmitButtonText(editAvatarSubmitButton);
-  setUserAvatar(avatarLinkInput.value)
-    .then(({ avatar }) => {
-      renderProfileAvatar(avatar);
-      handleClosePopup(popupEditAvatar);
-      changeSubmitButtonText(editAvatarSubmitButton);
-      formEditAvatar.reset();
+  isLinkImage(avatarLinkInput.value)
+    .then(() => {
+      setUserAvatar(avatarLinkInput.value)
+        .then(({ avatar }) => {
+          renderProfileAvatar(avatar);
+          handleClosePopup(popupEditAvatar);
+          changeSubmitButtonText(editAvatarSubmitButton);
+          formEditAvatar.reset();
+        })
+        .catch((err) => {
+          changeSubmitButtonText(editAvatarSubmitButton);
+          showPopupError(err);
+          console.log(err);
+        });
     })
     .catch((err) => {
       changeSubmitButtonText(editAvatarSubmitButton);

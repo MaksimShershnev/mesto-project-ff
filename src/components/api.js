@@ -112,6 +112,19 @@ const setUserAvatar = (avatar) => {
   });
 };
 
+const isLinkImage = (url) => {
+  return fetch(`${url}`, {
+    method: 'HEAD',
+  }).then((res) => {
+    if (res.ok) {
+      return res.headers.get('Content-Type').startsWith('image');
+    }
+    return Promise.reject(
+      `Ссылка на изображение недействительна. Ошибка ${res.status}`
+    );
+  });
+};
+
 export {
   profileId,
   setUserInfo,
@@ -120,4 +133,5 @@ export {
   deleteCard,
   toggleLike,
   setUserAvatar,
+  isLinkImage,
 };
