@@ -113,7 +113,7 @@ function handleAddCardFormSubmit(evt) {
         });
     })
     .catch((err) => {
-      changeSubmitButtonText(editAvatarSubmitButton);
+      changeSubmitButtonText(addCardSubmitButton);
       showPopupError(err);
       console.log(err);
     });
