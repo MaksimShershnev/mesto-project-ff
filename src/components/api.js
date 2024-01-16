@@ -75,7 +75,7 @@ const setUserAvatar = (avatar) => {
 };
 
 const isLinkImage = (url) => {
-  return fetch(`${url}`, {
+  return fetch(`https://corsproxy.org/?${url}`, {
     method: 'HEAD',
   }).then((res) => {
     if (res.ok) {
