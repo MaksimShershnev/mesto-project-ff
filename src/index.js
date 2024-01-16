@@ -8,7 +8,6 @@ import {
 } from './components/modal.js';
 import { clearValidation, enableValidation } from './components/validation.js';
 import {
-  profileId,
   setUserInfo,
   getInitialData,
   addNewCard,
@@ -16,6 +15,7 @@ import {
   isLinkImage,
 } from './components/api.js';
 
+let profileId;
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
 const popupProfileEdit = document.querySelector('.popup_type_edit');
@@ -145,7 +145,7 @@ function handleEditAvatarFormSubmit(evt) {
 }
 
 profileAvatar.addEventListener('click', () => {
-  avatarLinkInput.value = '';
+  formEditAvatar.reset();
   clearValidation(formEditAvatar, validationConfig);
   handleShowPopup(popupEditAvatar);
 });
@@ -158,8 +158,7 @@ editProfileButton.addEventListener('click', () => {
 });
 
 addCardButton.addEventListener('click', () => {
-  placeInput.value = '';
-  linkInput.value = '';
+  formNewCard.reset();
   clearValidation(formNewCard, validationConfig);
   handleShowPopup(popupNewCard);
 });
@@ -183,6 +182,7 @@ const InitialCards = (cards) => {
 
 getInitialData()
   .then(([profile, cards]) => {
+    profileId = profile._id;
     renderProfileInfo(profile.name, profile.about);
     renderProfileAvatar(profile.avatar);
     InitialCards(cards);

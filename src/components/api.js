@@ -1,5 +1,3 @@
-const profileId = '4d4af040351ef3fedcc56ba9';
-
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-4',
   headers: {
@@ -8,25 +6,22 @@ const config = {
   },
 };
 
-const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
-  headers: config.headers,
-}).then((res) => {
+const handleResponse = (res) => {
   if (res.ok) {
     return res.json();
   }
   return Promise.reject(
-    `Ошибка при получении данных пользователя. Ошибка ${res.status}`
+    `Ошибка при получении данных с сервера. Ошибка ${res.status}`
   );
-});
+};
+
+const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
+  headers: config.headers,
+}).then(handleResponse);
 
 const getInitialCards = fetch(`${config.baseUrl}/cards`, {
   headers: config.headers,
-}).then((res) => {
-  if (res.ok) {
-    return res.json();
-  }
-  return Promise.reject(`Ошибка при получении карточек. Ошибка ${res.status}`);
-});
+}).then(handleResponse);
 
 const getInitialData = () => {
   const loadCardsSuccess = [getUserInfo, getInitialCards];
@@ -41,14 +36,7 @@ const setUserInfo = (name, about) => {
       name,
       about,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(
-      `Ошибка при отправке информации на сервер. Ошибка ${res.status}`
-    );
-  });
+  }).then(handleResponse);
 };
 
 const addNewCard = (name, link) => {
@@ -59,42 +47,21 @@ const addNewCard = (name, link) => {
       name,
       link,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(
-      `Ошибка при добавлении карточки на сервер. Ошибка ${res.status}`
-    );
-  });
+  }).then(handleResponse);
 };
 
 const deleteCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return 'Успешное удаление';
-    }
-    return Promise.reject(
-      `Ошибка при удалении карточки с сервера. Ошибка ${res.status}`
-    );
-  });
+  }).then(handleResponse);
 };
 
 const toggleLike = (cardId, method) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method,
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(
-      `Ошибка при обработке лайка карточки. Ошибка ${res.status}`
-    );
-  });
+  }).then(handleResponse);
 };
 
 const setUserAvatar = (avatar) => {
@@ -104,12 +71,7 @@ const setUserAvatar = (avatar) => {
     body: JSON.stringify({
       avatar,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при смене аватара. Ошибка ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 const isLinkImage = (url) => {
@@ -126,7 +88,6 @@ const isLinkImage = (url) => {
 };
 
 export {
-  profileId,
   setUserInfo,
   getInitialData,
   addNewCard,

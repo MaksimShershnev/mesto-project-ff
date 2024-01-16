@@ -6,19 +6,15 @@ const cardContainer = document.querySelector('.places__list');
 const popupConfirmDelete = document.querySelector('.popup_type_сonfirm-delete');
 const confirmDeleteCardButton =
   popupConfirmDelete.querySelector('.popup__button');
+let idCardToDelete;
+let cardToDelete;
 
 function getCardTemplate() {
   const cloneTemplateCard = cardTemplate.querySelector('.card').cloneNode(true);
   return cloneTemplateCard;
 }
 
-function createCard(
-  card,
-  handleLikeCard,
-  handleDeleteCard,
-  handleClickImage,
-  profileId
-) {
+function createCard(card, handleLikeCard, handleClickImage, profileId) {
   const cardItem = getCardTemplate();
   const cardImage = cardItem.querySelector('.card__image');
   const cardTitle = cardItem.querySelector('.card__title');
@@ -36,7 +32,9 @@ function createCard(
   }
   if (isOwnerCard(card.owner._id, deteleButton, profileId)) {
     deteleButton.addEventListener('click', (evt) => {
-      handleDeleteCard(evt, card._id);
+      idCardToDelete = card._id;
+      cardToDelete = evt.target.closest('.card');
+      handleShowPopup(popupConfirmDelete);
     });
   }
 
@@ -47,6 +45,20 @@ function createCard(
 
   return cardItem;
 }
+
+function handleDeleteCard() {
+  deleteCard(idCardToDelete)
+    .then(() => {
+      cardToDelete.remove();
+      handleClosePopup(popupConfirmDelete);
+    })
+    .catch((err) => {
+      showPopupError(err);
+      console.log(err);
+    });
+}
+
+confirmDeleteCardButton.addEventListener('click', handleDeleteCard);
 
 function isLikedCard(card, profileId) {
   const likedCard = card.likes.some((like) => {
@@ -60,21 +72,6 @@ function isOwnerCard(cardOwnerId, button, profileId) {
     button.classList.add('card__delete-button_inactive');
   }
   return true;
-}
-
-function handleDeleteCard(evt, cardId) {
-  handleShowPopup(popupConfirmDelete);
-  confirmDeleteCardButton.addEventListener('click', () => {
-    deleteCard(cardId)
-      .then(() => {
-        evt.target.closest('.card').remove();
-        handleClosePopup(popupConfirmDelete);
-      })
-      .catch((err) => {
-        showPopupError(err);
-        console.log(err);
-      });
-  });
 }
 
 function handleLikeCard(evt, card, countOfLikes, profileId) {
@@ -104,13 +101,7 @@ function handleLikeCard(evt, card, countOfLikes, profileId) {
 }
 
 function renderCard(card, handleClickImage, profileId, position) {
-  const newCard = createCard(
-    card,
-    handleLikeCard,
-    handleDeleteCard,
-    handleClickImage,
-    profileId
-  );
+  const newCard = createCard(card, handleLikeCard, handleClickImage, profileId);
   switch (position) {
     case 'start':
       cardContainer.prepend(newCard);
