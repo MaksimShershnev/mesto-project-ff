@@ -2,8 +2,16 @@ const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-4',
   headers: {
     authorization: '2f4cbd38-3be1-44cb-bef2-5713f6020638',
-    'Content-Type': 'application/json',
   },
+};
+
+const sendRequest = (method, path, body) => {
+  const options = { method, headers: config.headers };
+  if (body) {
+    options.body = JSON.stringify(body);
+    options.headers['Content-Type'] = 'application/json';
+  }
+  return fetch(`${config.baseUrl}${path}`, options).then(handleResponse);
 };
 
 const handleResponse = (res) => {
@@ -15,64 +23,27 @@ const handleResponse = (res) => {
   );
 };
 
-const getUserInfo = fetch(`${config.baseUrl}/users/me`, {
-  headers: config.headers,
-}).then(handleResponse);
-
-const getInitialCards = fetch(`${config.baseUrl}/cards`, {
-  headers: config.headers,
-}).then(handleResponse);
+const getUserInfo = sendRequest('GET', '/users/me');
+const getInitialCards = sendRequest('GET', '/cards');
 
 const getInitialData = () => {
   const loadCardsSuccess = [getUserInfo, getInitialCards];
   return Promise.all(loadCardsSuccess);
 };
 
-const setUserInfo = (name, about) => {
-  return fetch(`${config.baseUrl}/users/me`, {
-    method: 'PATCH',
-    headers: config.headers,
-    body: JSON.stringify({
-      name,
-      about,
-    }),
-  }).then(handleResponse);
-};
+const setUserInfo = (name, about) =>
+  sendRequest('PATCH', '/users/me', { name, about });
 
-const addNewCard = (name, link) => {
-  return fetch(`${config.baseUrl}/cards `, {
-    method: 'POST',
-    headers: config.headers,
-    body: JSON.stringify({
-      name,
-      link,
-    }),
-  }).then(handleResponse);
-};
+const addNewCard = (name, link) =>
+  sendRequest('POST', '/cards', { name, link });
 
-const deleteCard = (cardId) => {
-  return fetch(`${config.baseUrl}/cards/${cardId}`, {
-    method: 'DELETE',
-    headers: config.headers,
-  }).then(handleResponse);
-};
+const deleteCard = (cardId) => sendRequest('DELETE', `/cards/${cardId}`);
 
-const toggleLike = (cardId, method) => {
-  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method,
-    headers: config.headers,
-  }).then(handleResponse);
-};
+const toggleLike = (cardId, method) =>
+  sendRequest(method, `/cards/likes/${cardId}`);
 
-const setUserAvatar = (avatar) => {
-  return fetch(`${config.baseUrl}/users/me/avatar`, {
-    method: 'PATCH',
-    headers: config.headers,
-    body: JSON.stringify({
-      avatar,
-    }),
-  }).then(handleResponse);
-};
+const setUserAvatar = (avatar) =>
+  sendRequest('PATCH', '/users/me/avatar', { avatar });
 
 const isLinkImage = (url) => {
   return fetch(`https://corsproxy.org/?${url}`, {
