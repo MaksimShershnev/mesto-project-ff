@@ -1,7 +1,9 @@
 .card__delete-button {
+  display: none;
   width: 18px;
   height: 18px;
-  background: transparent url('../../../images/delete-icon.svg') center no-repeat;
+  background: transparent url('../../../images/delete-icon.svg') center
+    no-repeat;
   /*Потом это будет из модификатора*/
   background-size: 18px 18px;
   border: none;
@@ -22,6 +24,6 @@
   opacity: 0.6;
 }
 
-.card__delete-button_inactive {
-  display: none;
+.card__delete-button_active {
+  display: inline-block;
 }

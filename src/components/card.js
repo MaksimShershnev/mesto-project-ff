@@ -68,10 +68,10 @@ function isLikedCard(card, profileId) {
 }
 
 function isOwnerCard(cardOwnerId, button, profileId) {
-  if (cardOwnerId !== profileId) {
-    button.classList.add('card__delete-button_inactive');
+  if (cardOwnerId === profileId) {
+    button.classList.add('card__delete-button_active');
+    return true;
   }
-  return true;
 }
 
 function handleLikeCard(evt, card, countOfLikes, profileId) {
